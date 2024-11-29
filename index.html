@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcrever Áudio</title>
+</head>
+<body>
+    <form id="audio-form">
+        <label>Envie um áudio:</label>
+        <input type="file" name="audio" id="audio">
+        <input type="submit" value="Enviar">
+    </form>
+
+    <div id="resultado">
+        <p>Envie um arquivo de áudio para a transcrição</p>
+    </div>
+
+    <script>
+        // Função para obter o CSRF token do cookie
+        function getCSRFToken() {
+            const csrfToken = document.cookie.split(';').find(cookie => cookie.trim().startsWith('csrftoken='));
+            return csrfToken ? csrfToken.split('=')[1] : '';
+        }
+
+        // Adiciona o evento de envio do formulário
+        document.getElementById('audio-form').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Impede o envio tradicional do formulário
+
+            const audioFile = document.getElementById('audio').files[0];
+            if (!audioFile) {
+                alert("Por favor, selecione um arquivo de áudio.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('audio', audioFile);
+
+            const csrfToken = getCSRFToken(); // Obtém o token CSRF do cookie
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/transcribe/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken // Envia o token CSRF no cabeçalho
+                    },
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao transcrever o áudio');
+                }
+
+                const data = await response.json();
+
+                // Exibe a transcrição ou a mensagem de erro
+                const transcriptionResult = document.getElementById('resultado');
+                if (data.transcription) {
+                    transcriptionResult.innerHTML = `<h2>Transcrição:</h2><p>${data.transcription}</p>`;
+                } else {
+                    transcriptionResult.innerHTML = `<p>Erro: ${data.error}</p>`;
+                }
+
+            } catch (error) {
+                console.error("Erro na requisição:", error);
+                document.getElementById('resultado').innerHTML = `<p>Erro na transcrição. Tente novamente.</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
