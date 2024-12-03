@@ -1,49 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transcrever Áudio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-<body>
-    <form id="audio-form">
-        <label>Envie um áudio:</label>
-        <input type="file" name="audio" id="audio">
-        <input type="submit" value="Enviar">
-    </form>
 
-    <div id="resultado">
-        <p>Envie um arquivo de áudio para a transcrição</p>
+<body>
+    <div class="container">
+        <div class="title">
+            <i class="fa-solid fa-compact-disc"></i>
+            <h1>Áudio Transcriber</h1>
+        </div>
+        <form id="audio-form">
+            <label>Envie um áudio:</label>
+            <input type="file" name="audio" id="audio">
+            <input type="submit" value="Enviar">
+        </form>
+
+        <h1>Transcrição:</h1>
+        <div id="resultado">
+            <p>Envie um arquivo de áudio para a transcrição</p>
+        </div>
     </div>
 
     <script>
-        // Função para obter o CSRF token do cookie
-        function getCSRFToken() {
-            const csrfToken = document.cookie.split(';').find(cookie => cookie.trim().startsWith('csrftoken='));
-            return csrfToken ? csrfToken.split('=')[1] : '';
-        }
+        document.getElementById('audio-form').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Impede o comportamento padrão
 
-        // Adiciona o evento de envio do formulário
-        document.getElementById('audio-form').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Impede o envio tradicional do formulário
+            console.log('Evento tratado com sucesso.');
 
             const audioFile = document.getElementById('audio').files[0];
             if (!audioFile) {
                 alert("Por favor, selecione um arquivo de áudio.");
-                return;
+                return; // Impede ações adicionais caso não haja arquivo selecionado
             }
 
             const formData = new FormData();
             formData.append('audio', audioFile);
 
-            const csrfToken = getCSRFToken(); // Obtém o token CSRF do cookie
-
             try {
                 const response = await fetch('http://127.0.0.1:8000/api/transcribe/', {
                     method: 'POST',
-                    headers: {
-                        'X-CSRFToken': csrfToken // Envia o token CSRF no cabeçalho
-                    },
                     body: formData,
                 });
 
@@ -52,7 +53,7 @@
                 }
 
                 const data = await response.json();
-
+                console.log(data);
                 // Exibe a transcrição ou a mensagem de erro
                 const transcriptionResult = document.getElementById('resultado');
                 if (data.transcription) {
@@ -68,4 +69,5 @@
         });
     </script>
 </body>
+
 </html>

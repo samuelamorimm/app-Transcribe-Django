@@ -1,0 +1,89 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+} 
+
+i {
+    font-size: 30px;
+}
+
+.container {
+    box-shadow: 0px 0px 29px 8px rgba(255, 255, 255, 0.451);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    padding: 60px;
+    border-radius: 50% 10% 50% 10% / 10% 50% 10% 50%;
+    background-color: #2d2d2d;
+    max-width: 800px;
+}
+
+
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    gap: 30px;
+    padding: 20px;
+    background-color: #616161;
+}
+
+form input[type='file'] {
+    border: 1px solid white;
+    border-bottom: 2.5px solid white;
+}
+
+form input {
+    border: 1px solid white;
+    border-bottom: 2.5px solid white;
+    padding: 5px 15px;
+    border-radius: 4px;
+    background-image: linear-gradient(to right, #62a81c, #53a105, #69b51c);
+    color: black;
+    font-weight: 500;
+    text-shadow: 1px 1px 85px rgba(255, 255, 255, 0.512);
+}
+
+label, input {
+    display: block;
+}
+
+label {
+    font-size: 20px;
+    font-weight: bold;
+
+}
+
+#resultado {
+    background-color: #616161;
+    border-radius: 8px;
+    padding: 20px;
+}
+
